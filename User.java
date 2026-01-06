@@ -111,42 +111,36 @@ public class User {
      * /* Notice: This is the size of the intersection of the two follows lists.
      */
     public int countMutual(User other) {
-        int count = 0;
-        String[] check = other.getfFollows();
-        if (check.length > this.follows.length) {
-            for (int i = 0; i < check.length; i++) {
-                if (check[i].equals(this.follows[i])) {
-                    count++;
-                }
-            }
-            return count;
-        }
-        count = 0;
-        for (int i = 0; i < this.follows.length; i++) {
-            if (check[i] != null) {
-                if (check[i].equals(this.follows[i])) {
-                    count++;
-                }
+    int count = 0;
+    String[] otherFollows = other.getfFollows();
+    
+    // For each person this user follows
+    for (int i = 0; i < this.follows.length; i++) {
+        if (this.follows[i] != null) {
+            // Check if the other user also follows them
+            if (other.follows(this.follows[i])) {
+                count++;
             }
         }
-        return count;
     }
+    return count;
+}
+
 
     /**
      * Checks is this user is a friend of the other user. (if two users follow
      * each other, they are said to be "friends.")
      */
     public boolean isFriendOf(User other) {
-        for (int i = 0; i < follows.length; i++) {
             if (this.getName() == null || other.getName() == null) {
                 return false;
             }
-            if (this.getfFollows()[i].contains(other.getName()) && other.getfFollows()[i].contains(this.getName())) {
+            if ((this.follows(other.getName()) == true) && other.follows(this.getName()) == true) {
                 return true;
-            }
+            }return false;
+    
         }
-        return false;
-    }
+        
 
     /**
      * Returns this user's name, and the names that s/he follows.
