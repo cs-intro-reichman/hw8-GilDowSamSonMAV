@@ -59,11 +59,11 @@ public class User {
      */
     public boolean follows(String name) {
         for (int i = 0; i < getfFollows().length; i++) {
-            if(follows[i] != null){
-            if (follows[i].equals(name)) {
-                return true;
+            if (follows[i] != null) {
+                if (follows[i].equals(name)) {
+                    return true;
+                }
             }
-        }
         }
         return false;
     }
@@ -95,13 +95,13 @@ public class User {
     public boolean removeFollowee(String name) {
         String[] names = getfFollows();
         for (int i = 0; i < names.length; i++) {
-            if(names[i] != null){
-            if (names[i].equals(name) ) {
-                names[i] = null;
-                fCount--;
-                return true;
+            if (names[i] != null) {
+                if (names[i].equals(name)) {
+                    names[i] = null;
+                    fCount--;
+                    return true;
+                }
             }
-        }
         }
         return false;
     }
@@ -121,12 +121,13 @@ public class User {
             }
             return count;
         }
+        count = 0;
         for (int i = 0; i < this.follows.length; i++) {
-            if(check[i] != null){
-            if (check[i].equals(this.follows[i])) {
-                count++;
+            if (check[i] != null) {
+                if (check[i].equals(this.follows[i])) {
+                    count++;
+                }
             }
-        }
         }
         return count;
     }
@@ -136,12 +137,13 @@ public class User {
      * each other, they are said to be "friends.")
      */
     public boolean isFriendOf(User other) {
-        for(int i = 0 ; i < follows.length; i ++){
-            if(this.follows[i] != null){
-            if(this.follows[i].equals(other.getName())){
+        for (int i = 0; i < follows.length; i++) {
+            if (this.getName() == null || other.getName() == null) {
+                return false;
+            }
+            if (this.getfFollows()[i].contains(other.getName()) && other.getfFollows()[i].contains(this.getName())) {
                 return true;
             }
-        }
         }
         return false;
     }
