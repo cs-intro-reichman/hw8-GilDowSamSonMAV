@@ -54,7 +54,7 @@ public class Network {
      * true.
      */
     public boolean addUser(String name) {
-        if (users.length == userCount) {
+        if (userCount == users.length) {
             return false;
         }
         for (int i = 0; i < users.length; i++) {
@@ -66,13 +66,13 @@ public class Network {
         }
         User newuUser = new User(name);
         for (int i = 0; i < users.length; i++) {
-            if (users[i] != null) {
-                if (users[i].getName().equals("null")) {
-                    users[i] = newuUser;
-                }
+            if (users[i] == null) {
+                users[i] = newuUser;
+                userCount++;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -82,14 +82,12 @@ public class Network {
      */
     public boolean addFollowee(String name1, String name2) {
 
-        for (int i = 0; i < users.length; i++) {
-            if (users[i] != null) {
-                if (users[i].getName().equals(name2)) {
-                    users[i].addFollowee(name1);
-                }
-            }
+        User user1 = getUser(name1);
+        User user2 = getUser(name2);
+        if (user1 == null || user2 == null) {
+            return false;
         }
-        return false;
+        return user1.addFollowee(name2);
     }
 
     /**
@@ -98,17 +96,21 @@ public class Network {
      * followees as the user with the given name.
      */
     public String recommendWhoToFollow(String name) {
-        User other = new User(name);
+        User other = getUser(name);
         int index = 0;
         if (users[index] != null) {
             int mutualMax = users[index].countMutual(other);
             String recom = users[index].getName();
 
-            for (int i = 1; i < users.length; i++) {
+            for (int i = 0; i < users.length; i++) {
+                if (users[i].getName().equals(name) || other.follows(users[i].getName())) {
+                        continue;
+                    }
                 if (users[i].countMutual(other) > mutualMax) {
                     mutualMax = users[i].countMutual(other);
+                   
                     recom = users[i].getName();
-                    index++;
+
                 }
 
             }
@@ -122,11 +124,11 @@ public class Network {
      * The user who appears the most in the follow lists of all the users.
      */
     public String mostPopularUser() {
-        if (users[0] != null) {
-            int max = followeeCount(users[0].getName());
-            String most = users[0].getName();
-            for (int i = 1; i < users.length; i++) {
-
+        int index = 0;
+        int max = followeeCount(users[index].getName());
+        String most = users[index].getName();
+        for (int i = 1; i < users.length; i++) {
+            if (users[i] != null && users[index] != null) {
                 int nominee2max = followeeCount(users[i].getName());
                 if (nominee2max > max) {
                     max = nominee2max;
@@ -135,9 +137,8 @@ public class Network {
 
             }
 
-            return most;
         }
-        return null;
+        return most;
     }
 
     /**
@@ -160,7 +161,12 @@ public class Network {
 
     // Returns a textual description of all the users in this network, and who they follow.
     public String toString() {
-        //// Replace the following statement with your code
-       return null;
+        String result = "";
+        for (int i = 0; i < userCount; i++) {  // Note: use userCount, not users.length
+            if (users[i] != null) {
+                result += users[i].toString() + "\n";
+            }
+        }
+        return result;
     }
 }
